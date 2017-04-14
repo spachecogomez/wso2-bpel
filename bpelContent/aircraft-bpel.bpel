@@ -10,7 +10,8 @@
 	xmlns:inc="http://aerolineas-latinoamericana.com/soa/incidents-message/process-incidents-message/"
 	xmlns:fil="http://mtx.enterprise/services/filter"
 	xmlns:br="http://aerolineas-latinoamericana.com/soa/business-rule-message/process-business-rule/"
-	xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable">
+	xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+	xmlns:rep="http://mtx.enterprise/services/reporter">
 	<!-- Import the client WSDL -->
 	<bpel:import location="aircraft-bpelArtifacts.wsdl"
 		namespace="www.aircraft-bpel.com" importType="http://schemas.xmlsoap.org/wsdl/" />
@@ -54,6 +55,9 @@
 		<bpel:partnerLink name="filterPartnerLink"
 			partnerLinkType="fil:filterPortType_PLT" partnerRole="filterPortType_Role"
 			initializePartnerRole="yes" />
+		<bpel:partnerLink name="reportPartnerLink"
+			partnerLinkType="rep:reportingType_PLTT" partnerRole="repPortType_Role"
+			initializePartnerRole="yes" />
     </bpel:partnerLinks>
 
 	<!-- ================================================================= -->
@@ -77,6 +81,8 @@
 		<bpel:variable name="inc_output" messageType="inc:reportIncidentResponse"></bpel:variable>
 		<bpel:variable name="fil_input" messageType="fil:evaluateAircraft"></bpel:variable>
 		<bpel:variable name="fil_output" messageType="fil:evaluateAircraftResponse"></bpel:variable>
+		<bpel:variable name="rep_input" messageType="rep:generate"></bpel:variable>
+		<bpel:variable name="rep_output" messageType="rep:generateResponse"></bpel:variable>
 	</bpel:variables>
 
 	<!-- ================================================================= -->
@@ -258,7 +264,7 @@
             <bpel:invoke name="invoke-filter" partnerLink="incidentsPartnerLink" operation="reportIncident" portType="inc:incidentBinding" inputVariable="inc_input" outputVariable="inc_output"></bpel:invoke>
          </bpel:sequence>
          <bpel:sequence name="createFiltering">
-         <bpel:assign validate="no" name="assign-incident-message">
+         <bpel:assign validate="no" name="assign-filtering-message">
                 <bpel:copy>
                     <bpel:from><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fil="http://mtx.enterprise/services/filter">
    <soapenv:Header/>
@@ -311,7 +317,24 @@
                     </bpel:to>
                 </bpel:copy>
             </bpel:assign>
-            <bpel:invoke name="invoke-incident" partnerLink="incidentsPartnerLink" operation="reportIncident" portType="inc:incidentBinding" inputVariable="inc_input" outputVariable="inc_output"></bpel:invoke>
+            <bpel:invoke name="invoke-filter" partnerLink="filterPartnerLink" operation="evaluateAircraft" portType="fil:FilterServiceServiceSoapBinding" inputVariable="fil_input" outputVariable="fil_output"></bpel:invoke>
+         </bpel:sequence>
+         
+         <bpel:sequence name="createReporting">
+         <bpel:assign validate="no" name="assign-reporting-message">
+                <bpel:copy>
+                    <bpel:from><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:rep="http://mtx.enterprise/services/reporter">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <rep:generate/>
+   </soapenv:Body>
+</soapenv:Envelope>
+</bpel:literal></bpel:from>
+                    <bpel:to variable="rep_input" part="parameters"></bpel:to>
+                </bpel:copy>
+                
+            </bpel:assign>
+            <bpel:invoke name="invoke-reporting" partnerLink="reportPartnerLink" operation="generate" portType="rep:ReportingWS" inputVariable="rep_input" outputVariable="rep_output"></bpel:invoke>
          </bpel:sequence>
          
         <bpel:invoke name="callbackClient" 

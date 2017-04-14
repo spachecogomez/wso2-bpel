@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://mtx.enterprise/services/reporter"
-	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"  
+	xmlns:ns1="http://schemas.xmlsoap.org/soap/http"
 	name="ReportingWSService" targetNamespace="http://mtx.enterprise/services/reporter">
 	<wsdl:types>
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -65,6 +67,10 @@
 			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
+	
+	<plnk:partnerLinkType name="reportingType_PLT">
+		<plnk:role name="reportingPortType_Role" portType="rep:ReportingWS" />
+	</plnk:partnerLinkType>
 	<wsdl:service name="ReportingWSService">
 		<wsdl:port binding="tns:ReportingWSServiceSoapBinding" name="ReportingWSPort">
 			<soap:address

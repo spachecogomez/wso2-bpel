@@ -18,7 +18,7 @@
   </extensions>
   <extensions>
     <extendedObject href="aircraft-bpel.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1492208604000"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1492211369000"/>
   </extensions>
   <extensions>
     <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.1/@copy.1"/>
@@ -153,7 +153,47 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.7"/>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.8"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@variables/@children.10"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@variables/@children.11"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.5/@activities.0/@copy.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6/@activities.0/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6/@activities.0/@copy.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6/@activities.0/@copy.3"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="aircraft-bpel.bpel#//@activity/@activities.6/@activities.1"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
 </extensionmodel:ExtensionMap>
