@@ -8,6 +8,7 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:cre="http://aerolineas-latinoamericana.com/soa/processes/crew-message/process-crew-message/"
 	xmlns:inc="http://aerolineas-latinoamericana.com/soa/incidents-message/process-incidents-message/"
+	xmlns:fil="http://mtx.enterprise/services/filter"
 	xmlns:br="http://aerolineas-latinoamericana.com/soa/business-rule-message/process-business-rule/"
 	xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable">
 	<!-- Import the client WSDL -->
@@ -24,6 +25,9 @@
 		importType="http://schemas.xmlsoap.org/wsdl/" />
 	<bpel:import location="contracts/incidents_service.wsdl"
 		namespace="http://aerolineas-latinoamericana.com/soa/incidents-message/process-incidents-message/"
+		importType="http://schemas.xmlsoap.org/wsdl/" />
+	<bpel:import location="contracts/FilterService.wsdl"
+		namespace="http://mtx.enterprise/services/filter"
 		importType="http://schemas.xmlsoap.org/wsdl/" />
 	<!-- ================================================================= -->
 	<!-- PARTNERLINKS -->
@@ -47,7 +51,10 @@
 		<bpel:partnerLink name="incidentsPartnerLink"
 			partnerLinkType="inc:incidentsPortType_PLT" partnerRole="incidentsPortType_Role"
 			initializePartnerRole="yes" />
-	</bpel:partnerLinks>
+		<bpel:partnerLink name="filterPartnerLink"
+			partnerLinkType="fil:filterPortType_PLT" partnerRole="filterPortType_Role"
+			initializePartnerRole="yes" />
+    </bpel:partnerLinks>
 
 	<!-- ================================================================= -->
 	<!-- VARIABLES -->
@@ -68,6 +75,8 @@
 		<bpel:variable name="crew_output" messageType="cre:changeCrewResponse"></bpel:variable>
 		<bpel:variable name="inc_input" messageType="inc:reportIncidentRequest"></bpel:variable>
 		<bpel:variable name="inc_output" messageType="inc:reportIncidentResponse"></bpel:variable>
+		<bpel:variable name="fil_input" messageType="fil:evaluateAircraft"></bpel:variable>
+		<bpel:variable name="fil_output" messageType="fil:evaluateAircraftResponse"></bpel:variable>
 	</bpel:variables>
 
 	<!-- ================================================================= -->
@@ -218,6 +227,50 @@
   <summary>summary</summary>
   <category>0</category>
 </inc:reportIncident>
+</bpel:literal></bpel:from>
+                    <bpel:to variable="fil_input" part="parameters"></bpel:to>
+                </bpel:copy>
+                <bpel:copy>
+                    <bpel:from part="payload" variable="input">
+                        <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                            <![CDATA[tns2:input/tns2:incidentsReport/tns2:description]]>
+                        </bpel:query>
+                    </bpel:from>
+                    <bpel:to part="parameters" variable="fil_input">
+                        <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                            <![CDATA[fil:request/aicraftModel]]>
+                        </bpel:query>
+                    </bpel:to>
+                </bpel:copy>
+                <bpel:copy>
+                    <bpel:from part="payload" variable="input">
+                        <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                            <![CDATA[tns2:input/tns2:crewPlaningChanges/tns2:totalCrewMemberRequired]]>
+                        </bpel:query>
+                    </bpel:from>
+                    <bpel:to part="parameters" variable="fil_input">
+                        <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                            <![CDATA[fil:request/aircraftType]]>
+                        </bpel:query>
+                    </bpel:to>
+                </bpel:copy>
+            </bpel:assign>
+            <bpel:invoke name="invoke-filter" partnerLink="incidentsPartnerLink" operation="reportIncident" portType="inc:incidentBinding" inputVariable="inc_input" outputVariable="inc_output"></bpel:invoke>
+         </bpel:sequence>
+         <bpel:sequence name="createFiltering">
+         <bpel:assign validate="no" name="assign-incident-message">
+                <bpel:copy>
+                    <bpel:from><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fil="http://mtx.enterprise/services/filter">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <fil:evaluateAircraft>
+         <request>
+            <aicraftModel>1</aicraftModel>
+            <aircraftType>Test</aircraftType>
+         </request>
+      </fil:evaluateAircraft>
+   </soapenv:Body>
+</soapenv:Envelope>
 </bpel:literal></bpel:from>
                     <bpel:to variable="inc_input" part="parameters"></bpel:to>
                 </bpel:copy>

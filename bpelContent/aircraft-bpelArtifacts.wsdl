@@ -1,11 +1,5 @@
-<?xml version="1.0"?>
-<definitions name="aircraft-bpel"
-        targetNamespace="www.aircraft-bpel.com"
-        xmlns:tns="www.aircraft-bpel.com"
-        xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
-        xmlns="http://schemas.xmlsoap.org/wsdl/"
-        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-        >
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="www.aircraft-bpel.com" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://mtx.enterprise/services/filter" name="aircraft-bpel" targetNamespace="www.aircraft-bpel.com">
 
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      TYPE DEFINITION - List of services participating in this BPEL process 
@@ -13,17 +7,17 @@
      output to the BPEL Process. But you can define or import any XML 
      Schema type and us them as part of the message types.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <plnk:partnerLinkType name="filterServicePLT">
+    <plnk:role name="filterServiceRole" portType="wsdl:FilterService"/>
+  </plnk:partnerLinkType>
+    <import location="contracts/FilterService.wsdl" namespace="http://mtx.enterprise/services/filter"/>
     <types>  
-        <schema attributeFormDefault="unqualified" 
-                elementFormDefault="qualified" 
-                targetNamespace="www.aircraft-bpel.com" 
-                xmlns="http://www.w3.org/2001/XMLSchema"
-                >
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="www.aircraft-bpel.com">
                 
             <element name="aircraft-bpelRequest">
                 <complexType>
                     <sequence>
-                        <element name="input" type="tns:aircraftIngateEvent" />
+                        <element name="input" type="tns:aircraftIngateEvent"/>
                     </sequence>
                 </complexType>
             </element>
@@ -39,41 +33,37 @@
         
             <complexType name="IncidentsReport">
             	<sequence>
-            		<element name="description" type="string"></element>
-            		<element name="summary" type="string"></element>
-            		<element name="category" type="int"></element>
+            		<element name="description" type="string"/>
+            		<element name="summary" type="string"/>
+            		<element name="category" type="int"/>
             	</sequence>
             </complexType>
         
             <complexType name="Maintenance">
             	<sequence>
-            		<element name="fuelPercentage" type="int"></element>
-            		<element name="undercarriageStatus" type="string"></element>
+            		<element name="fuelPercentage" type="int"/>
+            		<element name="undercarriageStatus" type="string"/>
             	</sequence>
             </complexType>
         
             <complexType name="CrewPlaningChanges">
             	<sequence>
-            		<element name="applyChangesOnCrewMembers"
-            			type="boolean">
+            		<element name="applyChangesOnCrewMembers" type="boolean">
             		</element>
-            		<element name="totalCrewMemberRequired"
-            			type="int">
+            		<element name="totalCrewMemberRequired" type="int">
             		</element>
-            		<element name="changePilot" type="string"></element>
+            		<element name="changePilot" type="string"/>
             	</sequence>
             </complexType>
         
             <complexType name="aircraftIngateEvent">
             	<sequence>
-            		<element name="eventDate" type="date"></element>
-            		<element name="incidentsReport"
-            			type="tns:IncidentsReport">
+            		<element name="eventDate" type="date"/>
+            		<element name="incidentsReport" type="tns:IncidentsReport">
             		</element>
-            		<element name="maintenance"
-            			type="tns:Maintenance">
+            		<element name="maintenance" type="tns:Maintenance">
             		</element>
-            		<element name="crewPlaningChanges" type="tns:CrewPlaningChanges"></element>
+            		<element name="crewPlaningChanges" type="tns:CrewPlaningChanges"/>
             	</sequence>
             </complexType>
         </schema>
@@ -84,11 +74,11 @@
      part of the port type defintions
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
     <message name="aircraft-bpelRequestMessage">
-        <part name="payload" element="tns:aircraft-bpelRequest"/>
+        <part element="tns:aircraft-bpelRequest" name="payload"/>
     </message>
     
     <message name="aircraft-bpelResponseMessage">
-        <part name="payload" element="tns:aircraft-bpelResponse"/>
+        <part element="tns:aircraft-bpelResponse" name="payload"/>
     </message>
 
 
@@ -128,11 +118,9 @@
      for a web service.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <binding name="aircraft-bpelBinding" type="tns:aircraft-bpel">
-        <soap:binding style="document"
-    		transport="http://schemas.xmlsoap.org/soap/http"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="initiate">
-            <soap:operation
-    			soapAction="www.aircraft-bpel.com/initiate"/>
+            <soap:operation soapAction="www.aircraft-bpel.com/initiate"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -142,8 +130,7 @@
     <binding name="aircraft-bpelCallbackBinding" type="tns:aircraft-bpelCallback">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="onResult">
-            <soap:operation
-    			soapAction="www.aircraft-bpel.com/onResult"/>
+            <soap:operation soapAction="www.aircraft-bpel.com/onResult"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -155,13 +142,13 @@
      a service unit.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <service name="aircraft-bpelService">
-        <port name="aircraft-bpelPort" binding="tns:aircraft-bpelBinding">
+        <port binding="tns:aircraft-bpelBinding" name="aircraft-bpelPort">
     		<soap:address location="http://localhost:8080/aircraft-bpel"/>
         </port>
     </service>
 
     <service name="aircraft-bpelServiceCallback">
-        <port name="aircraft-bpelPortCallbackPort" binding="tns:aircraft-bpelCallbackBinding">
+        <port binding="tns:aircraft-bpelCallbackBinding" name="aircraft-bpelPortCallbackPort">
     		<soap:address location="http://localhost:8080/aircraft-bpelCallback"/>
         </port>
     </service>
